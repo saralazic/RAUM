@@ -1,9 +1,11 @@
-package raum;
+package prm;
 
-public class Atan extends funkcija{
-
-	public double aprox(double x) {
-		return Math.atan(x);
-	}
+public class Atan extends Funkcija{
 	
+	public Atan() {}
+	
+	public double aprox(double x) {
+		return Math.acos(x);
+	}
+
 }

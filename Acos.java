@@ -1,6 +1,8 @@
-package raum;
+package prm;
 
-public class Acos extends funkcija{
+public class Acos extends Funkcija{
+
+	public Acos() {}
 	
 	public double aprox(double x) {
 		return Math.acos(x);

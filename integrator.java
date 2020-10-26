@@ -1,4 +1,5 @@
-package raum;
+package prm;
+
 import java.awt.*;
 import java.awt.event.*;
 
@@ -6,10 +7,12 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
 
-@SuppressWarnings("serial")
-public class integrator extends JFrame 
-{
-	protected TextArea prikaz = new TextArea();
+public class integrator extends JFrame{
+
+	
+	
+	public JTextField brk=new JTextField("", 6);//broj koraka
+	public TextArea prikaz = new TextArea();
 	protected JTextField preciznost = new JTextField("",6);
 	protected JTextField GornjaGranica = new JTextField("",6);
 	protected JTextField DonjaGranica = new JTextField("",6);
@@ -18,6 +21,8 @@ public class integrator extends JFrame
 	private Checkbox radio1, radio2, radio3;
 	private JButton radi, restart;
 	private  Tastatura t=new Tastatura(this);
+	
+	public String s1="", s2=""; //za ispis postupka
 	
 	private static int ROMBERG=0, SIMPSON=1, TRAPEZNA=2;
 	private int Metod;
@@ -28,13 +33,11 @@ public class integrator extends JFrame
 	protected boolean tdg, tgg, mdg, mgg; 
 	protected int dgs, ggs;
 	
-	@SuppressWarnings("unused")
 	private String dg, gg, p;//donja granica, gornja granica, preciznost
 	protected static int DGr=0, GGr=1, Prec=2 ,Fn=3;
 	protected int lbl;
+	
 
-	
-	
 	public integrator()
 	{
 		super("Numericka integracija");
@@ -43,8 +46,8 @@ public class integrator extends JFrame
 		setVisible(true);
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e){
-//				if(akt!=null)
-//					akt.zavrsi(); 
+				//if(akt!=null)
+				//	akt.zavrsi(); 
 				dispose(); 
 				}
 		});
@@ -53,11 +56,18 @@ public class integrator extends JFrame
 		tdg=tgg=false;
 	}
 	
-	public void IzborMetoda(Panel pl2) {
+	
+	
+	
+	public void IzborMetoda(Panel pl) {
+		Panel pl2=new Panel();
 		Panel pomocni5 = new Panel();
 		Panel pomocni6 = new Panel();
 		Panel pomocni7 = new Panel();
 		Panel pomocni8 = new Panel();
+		Panel pomocni9=new Panel();
+		Panel pomocni10=new Panel();
+		
 		pomocni6.setLayout(new GridLayout(1, 2));
 		pomocni7.setLayout(new GridLayout(1, 2));
 		pomocni8.setLayout(new GridLayout(1, 2));
@@ -68,16 +78,23 @@ public class integrator extends JFrame
 		Panel ppomocni6 = new Panel();
 		Panel ppomocni7 = new Panel();
 		Panel ppomocni8 = new Panel();
+		Panel ppomocni9=new Panel();
+		Panel ppomocni10=new Panel();
 		
 		pl2.setLayout(new GridLayout(4, 1));
 		
 		
-		ppomocni7.add(new Label("  Preciznost:", Label.LEFT));
+		ppomocni7.add(new Label("  Preciznost/korak:", Label.LEFT));
 		ppomocni8.add(preciznost);
+		ppomocni9.add(new Label(" Broj koraka:"), Label.LEFT);
+		ppomocni10.add(brk);
+		
 		pomocni5.add(ppomocni5);
 		pomocni6.add(ppomocni6);
 		pomocni7.add(ppomocni7);
 		pomocni8.add(ppomocni8);
+		pomocni9.add(ppomocni9);
+		pomocni10.add(ppomocni10);
 		
 		pomocni5.add(new Label("Metoda integracije:", Label.LEFT));
 		CheckboxGroup grupa = new CheckboxGroup();
@@ -96,12 +113,24 @@ public class integrator extends JFrame
 		
 		pl2.add(pomocni5);
 		pl2.add(pomocni6);
+		
+		Panel pl3=new Panel();
+		pl3.setLayout(new GridLayout(4,1));
 		pl2.add(pomocni7);
 		pl2.add(pomocni8);
-
+		pl3.add(pomocni9);
+		pl3.add(pomocni10);
+		pl.setLayout(new GridLayout(2,1));
+		//pl.add(pl3);
+		//pl.add(pl2);
 		ploca.add(pl2);
-	}
 		
+		
+	}
+	
+	
+	
+	
 	private class OsluskivacIzbora implements ItemListener{
 		@Override
 		public void itemStateChanged(ItemEvent dog) {
@@ -114,6 +143,8 @@ public class integrator extends JFrame
 			}
 		}
 	}
+	
+	
 	
 	@SuppressWarnings("static-access")
 	public void PoljaZaUnos(Panel pomocni3) {
@@ -203,12 +234,12 @@ public class integrator extends JFrame
 		});
 	}
 	
+	
 	public void DugmeZaRezultat() {
 		radi = new JButton("Izracunaj");
 		radi.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				t.f.printfun();
 				Double rez;
 				rez=0.0;
 				String prec=preciznost.getText();
@@ -217,48 +248,33 @@ public class integrator extends JFrame
 				
 				switch(Metod) {
 					case 0: {
-						Romberg r=new Romberg(Double.parseDouble(prec));
+						Romberg r=new Romberg(Double.parseDouble(prec), integrator.this);
 						if (gore>dole)
-							try {
-								rez=r.Racunaj(t.f, gore, dole);
-							} catch (Greska e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							}
+								rez=r.Racunaj(t.f, dole, gore);
 						else
-							try {
-								rez=-r.Racunaj(t.f, dole, gore);
-							} catch (Greska e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							}
-					}; 
+								rez=-r.Racunaj(t.f, gore, dole);
+					}; break;
 						case 1:{
-							Simpson r=new Simpson(Double.parseDouble(prec));
+							Simpson r=new Simpson(Double.parseDouble(prec), integrator.this);
 							if (gore>dole)
-								try {
-									rez=r.Racunaj(t.f, gore, dole);
-								} catch (Greska e1) {
-									// TODO Auto-generated catch block
-									e1.printStackTrace();
-								}
+									rez=r.Racunaj(t.f, dole, gore);
 							else
-								try {
-									rez=-r.Racunaj(t.f, dole,  gore);
-								} catch (Greska e1) {
-									// TODO Auto-generated catch block
-									e1.printStackTrace();
-								}
-						};
+									rez=-r.Racunaj(t.f, gore, dole);
+						}; break;
+						
 						case 2:{
-						//DODAJ TRAPEZNU
-						}
+							Trapezna tr=new Trapezna(Double.parseDouble(prec), integrator.this);
+							if (gore>dole)
+								rez=tr.Racunaj(t.f, dole, gore);
+						else
+								rez=-tr.Racunaj(t.f, gore, dole);
+						};
 					}
 				rezultat.setText(""+rez);
 			
-			String s1;
-			s1=(""+gore+"\n"+dole+"\n"+prec);
-			prikaz.setText(s1);
+			
+			prikaz.setText(s1+"\n\n\n"+s2);
+			prikaz.append("\n\nI="+rez);
 			
 		}
 		});
@@ -273,7 +289,7 @@ public class integrator extends JFrame
 				t.reset(); 
 				
 				//enable dugmica na tastaturi se vraca na pocetne vrednosti
-			   t.inicijalizacija();
+			    t.inicijalizacija();
 			
 				GornjaGranica.setText("");
 				DonjaGranica.setText("");
@@ -285,13 +301,12 @@ public class integrator extends JFrame
 	}
 		
 
-	private void popuniProzor()
-	{
+	private void popuniProzor(){
 
-	add(prikaz, "Center");
+		add(prikaz, "Center");
 	
 		ploca.setLayout(new GridLayout(1, 4));
-	//	Color c=new Color(201,241,227);
+	
 		Color c2=new Color(254,255,205);
 		ploca.setBackground(c2);
 		add(ploca, "North");
@@ -316,8 +331,8 @@ public class integrator extends JFrame
 		pl3.add(pomocni3);
 		
 		Panel pppl1 = new Panel();
-		pppl1.add(new Label("Rezultat:", Label.LEFT));
-		pppl1.add(rezultat);
+		pppl1.add(new Label("Broj koraka:", Label.LEFT));
+		pppl1.add(brk);
 		pl3.add(pppl1);
 		ploca.add(pl3);
 
@@ -325,11 +340,14 @@ public class integrator extends JFrame
 		
 	}
 
-	public static void main(String[] args)
-	{
+	public static void main(String[] args){
+		
 		integrator i=new integrator();
 		i.rezultat.setText("");
 		
 	}
 	
 }
+
+	
+

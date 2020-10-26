@@ -1,9 +1,11 @@
-package raum;
+package prm;
 
+public class Cot extends Funkcija{
 
-public class Cot extends funkcija{
+	public Cot() {}
 	
 	public double aprox(double x) {
 		return 1/Math.tan(x);
 	}
+	
 }

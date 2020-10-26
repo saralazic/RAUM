@@ -1,10 +1,11 @@
-package raum;
+package prm;
 
+public class Root extends Funkcija{
 
-public class Root extends funkcija{
+	public Root() {}
 	
 	public double aprox(double x) {
 		return Math.sqrt(x);
 	}
+	
 }
-

@@ -1,10 +1,10 @@
-package raum;
+package prm;
 
+public class Ln extends Funkcija{
 
-public class Ln extends funkcija{
+	public Ln() {}
 	
 	public double aprox(double x) {
 		return Math.log(x);
 	}
-	
 }

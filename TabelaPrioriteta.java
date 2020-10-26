@@ -1,4 +1,4 @@
-package raum;
+package prm;
 
 
 public class TabelaPrioriteta {

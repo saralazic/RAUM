@@ -1,5 +1,4 @@
-package raum;
-
+package prm;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -14,17 +13,17 @@ public class ImagePanel extends JPanel{
 
     public ImagePanel() {
        try {                
-          image = ImageIO.read(new File("C:\\Users\\Sara\\Desktop/Picture1.png"));
+          image = ImageIO.read(new File("C:\\Users\\TEMP\\Desktop/integral.png"));
      
        } catch (IOException ex) {
-            // handle exception...
+            
        }
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawImage(image, 0, 0, this); // see javadoc for more info on the parameters            
+        g.drawImage(image, 0, 0, this);            
     }
 
 }

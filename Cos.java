@@ -1,9 +1,12 @@
-package raum;
+package prm;
 
+public class Cos extends Funkcija{
 
-public class Cos extends funkcija{
+	public Cos() {}
 	
+
 	public double aprox(double x) {
 		return Math.cos(x);
 	}
+	
 }

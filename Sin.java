@@ -1,9 +1,11 @@
-package raum;
+package prm;
 
-
-public class Sin extends funkcija{
+public class Sin extends Funkcija{
+	
+	public Sin() {}
 	
 	public double aprox(double x) {
 		return Math.sin(x);
 	}
+
 }
